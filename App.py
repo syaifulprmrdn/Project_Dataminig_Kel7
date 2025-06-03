@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
-import joblib
+import joblib as jb
 import seaborn as sns
 import matplotlib.pyplot as plt
 
