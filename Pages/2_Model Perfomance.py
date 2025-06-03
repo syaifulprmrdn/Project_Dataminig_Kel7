@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import joblib
+import joblib as jb
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
 
@@ -30,7 +30,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=t_size, rand
 #Load Model
 @st.cache_resource
 def load_model(path):
-    model = joblib.load(path)
+    model = jb.load(path)
     return model
 
 model1 = load_model('model/decision_tree_model.joblib')
