@@ -1,5 +1,0 @@
-mkdir data
-mv china_cancer_patients_synthetic.csv data/
-git add data/china_cancer_patients_synthetic.csv
-git commit -m "add dataset to data folder"
-git push origin main
