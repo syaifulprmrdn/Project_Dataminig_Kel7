@@ -10,7 +10,7 @@ st.title("🎈 Selamat datang di Aplikasi Dashboard Cancer Patients")
 st.write("Aplikasi ini memvisualisasikan data synthetic China cancer patients.")
 
 # Load Dataset
-df = pd.read_csv("/mnt/data/china_cancer_patients_synthetic.csv")
+df = pd.read_csv("Model/china_cancer_patients_synthetic.csv")
 
 # Tampilkan dataset dan kolom
 st.subheader("📁 Dataset Cancer Patients")
