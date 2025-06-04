@@ -12,7 +12,7 @@ st.title("🎈 Selamat datang di Aplikasi Streamlit Sederhana")
 st.write("Aplikasi ini dibuat untuk demonstrasi projek akhir Data Mining.")
 
 #Load Dataset
-df = pd.read_csv("Model/iris (1).csv")
+df = pd.read_csv("Model/iris.csv")
 
 # Tampilkan dataframe
 st.subheader("📁 Dataset Iris")
