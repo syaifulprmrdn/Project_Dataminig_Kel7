@@ -3,22 +3,19 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import LabelEncoder
 
+# Konfigurasi halaman
 st.set_page_config(page_title="Life Expectancy Model Dashboard", layout="wide")
 st.title("🚀 Model Performance Dashboard: Life Expectancy")
 
 # Load Dataset
 df = pd.read_csv("Model/Life_Expectancy_Data.csv")
-
-    # Tampilkan dataset dan kolom
-    st.subheader("📁 Dataset Life Expectancy")
-    st.write("Kolom:", df.columns.tolist())
-    st.dataframe(df)
-
+st.subheader("📁 Dataset Life Expectancy")
+st.write("Kolom:", df.columns.tolist())
+st.dataframe(df)
 
 # Preprocessing
 st.subheader("⚙️ Preprocessing Data")
@@ -60,7 +57,7 @@ st.metric("MAE", round(mae, 4))
 st.subheader("📊 Plot Prediksi vs Aktual")
 fig1, ax1 = plt.subplots(figsize=(8, 6))
 sns.scatterplot(x=y_test, y=y_pred, color="green", ax=ax1)
-ax1.plot([y.min(), y.max()], [y.min(), y.max()], 'r--', lw=2)
+ax1.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
 ax1.set_xlabel("Aktual Life Expectancy")
 ax1.set_ylabel("Prediksi Life Expectancy")
 ax1.set_title("Prediksi vs Aktual")
