@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import os
+
 
 st.set_page_config(page_title="Life Expectancy Dashboard", layout="centered")
 st.sidebar.header("Dashboard")
@@ -11,10 +11,7 @@ st.title("🎈 Selamat datang di Aplikasi Dashboard Data Life Expectancy")
 st.write("Aplikasi ini memvisualisasikan data Life Expectancy.")
 
 # Load Dataset
-if not os.path.exists("Model/Life_Expectancy_Data.csv"):
-    st.error("Dataset tidak ditemukan! Pastikan file ada di folder Model/")
-else:
-    df = pd.read_csv("Model/Life_Expectancy_Data.csv")
+df = pd.read_csv("Model/Life_Expectancy_Data.csv")
 
     # Tampilkan dataset dan kolom
     st.subheader("📁 Dataset Life Expectancy")
