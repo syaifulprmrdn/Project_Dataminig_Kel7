@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import LabelEncoder
+from geopy.geocoders import Nominatim
 
 st.set_page_config(page_title="Life Expectancy Prediction", page_icon="📈", layout="wide")
 st.title("🚀 Life Expectancy Prediction Dashboard")
@@ -34,11 +35,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = RandomForestRegressor(random_state=42, n_estimators=100)
 model.fit(X_train, y_train)
 
-# Daftar fitur input
+# Daftar fitur input (selain Country yang hanya disimpan)
 feature_list = X.columns.tolist()
 
 # Input data user
 st.subheader("📝 Masukkan Data untuk Prediksi")
+country = st.text_input("Nama Negara")
 input_data = {}
 for feature in feature_list:
     if feature == 'Status':
@@ -49,8 +51,44 @@ for feature in feature_list:
 # Prediksi saat tombol ditekan
 if st.button("Prediksi Life Expectancy"):
     input_df = pd.DataFrame([input_data])
+    input_df['Country'] = country  # Tambahkan kolom nama negara
     st.subheader("📁 Data yang Dimasukkan:")
-    st.dataframe(input_df)
+    st.dataframe(input_df[['Country'] + feature_list])
 
-    prediksi = model.predict(input_df)
-    st.success(f"🌟 Hasil Prediksi Life Expectancy: {prediksi[0]:.2f}")
+    # Prediksi
+    prediksi = model.predict(input_df[feature_list])
+    st.success(f"🌟 Hasil Prediksi Life Expectancy untuk **{country}**: {prediksi[0]:.2f}")
+
+    # Cari koordinat negara
+    geolocator = Nominatim(user_agent="geoapiExercises")
+    location = geolocator.geocode(country)
+    if location:
+        lat, lon = location.latitude, location.longitude
+        st.subheader("🗺️ Lokasi Negara:")
+        st.write(f"Latitude: {lat}, Longitude: {lon}")
+
+        # Buat data peta
+        map_data = pd.DataFrame({'lat': [lat], 'lon': [lon]})
+        st.pydeck_chart(
+            {
+                "layers": [
+                    {
+                        "type": "ScatterplotLayer",
+                        "data": map_data,
+                        "get_position": "[lon, lat]",
+                        "get_radius": 1000000,
+                        "get_fill_color": [255, 0, 0, 160],
+                        "pickable": True,
+                    }
+                ],
+                "initialViewState": {
+                    "latitude": lat,
+                    "longitude": lon,
+                    "zoom": 2,
+                    "pitch": 0,
+                },
+                "mapStyle": "mapbox://styles/mapbox/light-v9",
+            }
+        )
+    else:
+        st.warning("❌ Lokasi negara tidak ditemukan.")
