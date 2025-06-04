@@ -11,8 +11,7 @@ st.set_page_config(page_title="Model Performance", layout="wide")
 st.title("📈 Model Performance")
 
 # Load data
-url = "https://raw.githubusercontent.com/syaifulprmrdn/Project_Dataminig_Kel7/main/Model/china_cancer_patients_synthetic.csv"
-df = pd.read_csv(url)
+
 
 # Preprocess
 target_col = "Diagnosis"
