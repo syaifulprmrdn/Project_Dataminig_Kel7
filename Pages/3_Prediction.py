@@ -1,30 +1,33 @@
 import streamlit as st
 import pandas as pd
-import joblib
+from sklearn.ensemble import RandomForestClassifier
 
-st.set_page_config(page_title="Prediction", page_icon="📈")
-st.header("Prediction")
-st.write("Make a prediction using a new data")
+st.set_page_config(page_title="Prediction", layout="wide")
+st.title("🔮 Cancer Diagnosis Prediction")
 
-@st.cache_resource
-def load_model(path):
-    model = joblib.load(path)
-    return model
+# Load data
+url = "https://raw.githubusercontent.com/syaifulprmrdn/Project_Dataminig_Kel7/main/Model/china_cancer_patients_synthetic.csv"
+df = pd.read_csv(url)
 
-model = load_model('model/decision_tree_model.joblib')
+# Preprocess
+target_col = "Diagnosis"
+X = df.drop(columns=[target_col])
+y = df[target_col]
+if y.dtypes == 'object':
+    y = pd.factorize(y)[0]
 
-st.write("Masukkan data yang akan diprediksi:")
+# Train model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X, y)
 
-# Input fitur
-seplen = st.number_input("Sepal Length", min_value=0.0, max_value=8.0, value=2.0)
-sepwid = st.number_input("Sepal Width", min_value=0.0, max_value=8.0, value=2.0)
-petlen = st.number_input("Petal Length", min_value=0.0, max_value=8.0, value=2.0)
-petwid = st.number_input("Petal Width", min_value=0.0, max_value=8.0, value=2.0)
+# Input user
+st.subheader("Masukkan data pasien:")
+input_data = {}
+for col in X.columns:
+    val = st.number_input(f"{col}", float(X[col].min()), float(X[col].max()), float(X[col].mean()))
+    input_data[col] = val
 
-# Prediksi saat tombol ditekan
-if st.button("Prediksi"):
-    input_data = pd.DataFrame([[seplen, sepwid, petlen, petwid]],
-                              columns=["sepal.length", "sepal.width", "petal.length", "petal.width"])
-    st.dataframe(input_data)
-    hasil = model.predict(input_data)
-    st.success(f"Hasil Prediksi: {hasil[0]}")
+if st.button("Prediksi Diagnosis"):
+    input_df = pd.DataFrame([input_data])
+    pred = model.predict(input_df)[0]
+    st.success(f"Prediksi diagnosis: {pred}")
