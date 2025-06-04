@@ -1,57 +1,46 @@
 import streamlit as st
 import pandas as pd
-import joblib 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Prediction", page_icon="📈")
-st.header("Predictions")
+st.set_page_config(page_title="Model Performance", layout="wide")
 
-#Load Dataset
-df = pd.read_csv("Model/iris.csv")
-dataset = pd.read_csv('https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv')
+st.title("📈 Model Performance")
 
-#Tampilkan Dataframe
-st.subheader("📁 Iris Dataset")
-st.dataframe(dataset)
+# Load data
+url = "https://raw.githubusercontent.com/syaifulprmrdn/Project_Dataminig_Kel7/main/Model/china_cancer_patients_synthetic.csv"
+df = pd.read_csv(url)
 
-#Test Size
-testing = st.slider("Data Testing", min_value=10, max_value=90, value=20)
-st.write(f"Nilai yang dipilih: {testing}")
-t_size = testing/100
+# Preprocess
+target_col = "Diagnosis"
+X = df.drop(columns=[target_col])
+y = df[target_col]
+if y.dtypes == 'object':
+    y = pd.factorize(y)[0]
 
-#Select features and target
-X = dataset.drop('variety', axis=1)
-y = dataset['variety']
+# Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-#Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=t_size, random_state=42)
+# Model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
 
-#Load Model
-@st.cache_resource
-def load_model(path):
-    model = joblib.load(path)
-    return model
+# Evaluasi
+y_pred = model.predict(X_test)
+report = classification_report(y_test, y_pred, output_dict=True)
+df_report = pd.DataFrame(report).transpose()
 
-model1 = load_model('model/decision_tree_model.joblib')
+st.subheader("📄 Classification Report")
+st.dataframe(df_report)
 
-# Prediksi saat tombol ditekan
-if st.button("Hasil"):
-    y_pred1 = model1.predict(X_test)
-    #Evaluate the models
-    accuracy1 = accuracy_score(y_test, y_pred1)
-    metric1 = classification_report(y_test, y_pred1, output_dict=True)
-    st.success(f"Model {type(model1).__name__}")
-
-    a, b = st.columns(2)
-    c, d = st.columns(2)
-
-    acc1 = metric1["accuracy"]*100
-    prec1 = metric1["macro avg"]["precision"]*100
-    a.metric("Accuracy", f"{acc1}%", delta=None, border=True)
-    b.metric("Precision", f"{prec1}%", delta=None, border=True)
-
-    rec1 = metric1["macro avg"]["recall"]*100
-    fsc1 = metric1["macro avg"]["f1-score"]*100
-    c.metric("Recall", f"{rec1}%", delta=None, border=True)
-    d.metric("F1-Score", f"{fsc1}%", delta=None, border=True)
+# Confusion matrix
+st.subheader("📊 Confusion Matrix")
+cm = confusion_matrix(y_test, y_pred)
+fig, ax = plt.subplots()
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax)
+ax.set_xlabel('Predicted')
+ax.set_ylabel('True')
+st.pyplot(fig)
