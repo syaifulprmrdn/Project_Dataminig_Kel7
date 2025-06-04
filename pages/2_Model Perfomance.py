@@ -13,8 +13,12 @@ st.title("🚀 Model Performance Dashboard: Life Expectancy")
 
 # Load Dataset
 df = pd.read_csv("Model/Life_Expectancy_Data.csv")
-st.subheader("📁 Dataset Life Expectancy")
-st.dataframe(dataset)
+
+    # Tampilkan dataset dan kolom
+    st.subheader("📁 Dataset Life Expectancy")
+    st.write("Kolom:", df.columns.tolist())
+    st.dataframe(df)
+
 
 # Preprocessing
 st.subheader("⚙️ Preprocessing Data")
