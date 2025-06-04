@@ -3,44 +3,49 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="China Cancer Patients Dashboard", layout="centered")
+st.set_page_config(page_title="Life Expectanc Dashboard", layout="centered")
 st.sidebar.header("Dashboard")
 
-st.title("🎈 Selamat datang di Aplikasi Dashboard Cancer Patients")
-st.write("Aplikasi ini memvisualisasikan data synthetic China cancer patients.")
+st.title("🎈 Selamat datang di Aplikasi Dashboard Data Life Expectancy")
+st.write("Aplikasi ini memvisualisasikan data Life Expectancy.")
 
 # Load Dataset
-df = pd.read_csv("Model/china_cancer_patients_synthetic.csv")
+df = pd.read_csv("Model/Life Expectancy.csv")
 
 # Tampilkan dataset dan kolom
-st.subheader("📁 Dataset Cancer Patients")
+st.subheader("📁 Dataset Life Expectancy")
 st.write("Kolom:", df.columns.tolist())
 st.dataframe(df)
 
-# Distribusi kelas (jika ada kolom target)
-if 'Diagnosis' in df.columns:
-    st.subheader("Distribusi Jumlah Data Berdasarkan Diagnosis")
-    diagnosis_counts = df['Diagnosis'].value_counts()
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.barplot(x=diagnosis_counts.index, y=diagnosis_counts.values, palette="Set2", ax=ax)
-    ax.set_ylabel("Jumlah Data")
-    ax.set_xlabel("Diagnosis")
-    ax.set_title("Distribusi Kelas Diagnosis")
-    st.pyplot(fig)
-else:
-    st.write("Kolom target 'Diagnosis' tidak ditemukan.")
+# Visualisasi 1: Distribusi Life Expectancy
+plt.figure(figsize=(8,5))
+sns.histplot(data['Life expectancy '], bins=30, kde=True, color='skyblue')
+plt.title('Distribusi Life Expectancy')
+plt.xlabel('Life Expectancy')
+plt.ylabel('Jumlah Negara')
+plt.show()
 
-# Korelasi fitur numerik
-st.subheader("Korelasi antar Fitur Numerik")
-numerical_df = df.select_dtypes(include=['float64', 'int64'])
-if not numerical_df.empty:
-    corr = numerical_df.corr()
-    fig2, ax2 = plt.subplots(figsize=(8, 6))
-    sns.heatmap(corr, annot=True, cmap="coolwarm", ax=ax2)
-    st.pyplot(fig2)
-else:
-    st.write("Tidak ada kolom numerik untuk dihitung korelasinya.")
+# Visualisasi 2: Rata-rata Life Expectancy per Region
+plt.figure(figsize=(12,6))
+sns.barplot(data=data, x='Status', y='Life expectancy ')
+plt.title('Rata-rata Life Expectancy Berdasarkan Status Negara')
+plt.ylabel('Rata-rata Life Expectancy')
+plt.xlabel('Status Negara')
+plt.show()
 
+# Visualisasi 3: Korelasi antar variabel numerik
+plt.figure(figsize=(15,12))
+sns.heatmap(data.corr(numeric_only=True), annot=True, cmap='coolwarm')
+plt.title('Matriks Korelasi')
+plt.show()
+
+# Visualisasi 4: Tren Life Expectancy per Tahun
+plt.figure(figsize=(10,6))
+sns.lineplot(data=data, x='Year', y='Life expectancy ', ci=None)
+plt.title('Tren Life Expectancy Global per Tahun')
+plt.xlabel('Tahun')
+plt.ylabel('Rata-rata Life Expectancy')
+plt.show()
 # Input interaktif
 name = st.text_input("Siapa nama Anda?")
 if name:
