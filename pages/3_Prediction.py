@@ -3,11 +3,9 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 st.set_page_config(page_title="Prediction", layout="wide")
-st.title("🔮 Cancer Diagnosis Prediction")
+st.title("🔮 Life Expectancy Prediction")
 
 # Load data
-url = "https://raw.githubusercontent.com/syaifulprmrdn/Project_Dataminig_Kel7/main/Model/china_cancer_patients_synthetic.csv"
-df = pd.read_csv(url)
 
 # Preprocess
 target_col = "Diagnosis"
