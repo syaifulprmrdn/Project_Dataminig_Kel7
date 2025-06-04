@@ -10,7 +10,7 @@ st.title("🎈 Selamat datang di Aplikasi Dashboard Data Life Expectancy")
 st.write("Aplikasi ini memvisualisasikan data Life Expectancy.")
 
 # Load Dataset
-df = pd.read_csv("Model/Life Expectancy.csv")
+df = pd.read_csv("Model/Life Expectancy Data.csv")
 
 # Tampilkan dataset dan kolom
 st.subheader("📁 Dataset Life Expectancy")
